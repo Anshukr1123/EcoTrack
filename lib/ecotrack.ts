@@ -129,10 +129,13 @@ export const MOCK_LEADERBOARD: LeaderboardEntry[] = [
 
 // Generates a unique ID
 export function generateId(): string {
+  if (typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.randomUUID) {
+    return globalThis.crypto.randomUUID();
+  }
   if (typeof window !== 'undefined' && window.crypto && window.crypto.randomUUID) {
     return window.crypto.randomUUID();
   }
-  return `eco-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  return `eco-${Date.now()}-${Math.floor(Math.random() * 10000000)}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
 // Predictive emission calculations helper

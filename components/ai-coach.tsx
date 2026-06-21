@@ -83,7 +83,7 @@ export default function AiCoach({ onAddActivity }: AiCoachProps) {
 
     const co2 = activity.amount * factorDetails.factor;
     const pointsEarned =
-      factorDetails.pointsMultiplier > 0 ? Math.round(activity.amount * factorDetails.pointsMultiplier) : 0;
+      factorDetails.pointsMultiplier !== 0 ? Math.round(activity.amount * factorDetails.pointsMultiplier) : 0;
 
     const log: ActivityLog = {
       id: generateId(),

@@ -35,7 +35,7 @@ export default function ActivityForm({ onAdd }: { onAdd: (activity: ActivityLog)
 
     const factorDetails = EMISSION_FACTORS[type];
     const co2 = parsedAmount * factorDetails.factor;
-    const pointsEarned = factorDetails.pointsMultiplier > 0 ? Math.round(parsedAmount * factorDetails.pointsMultiplier) : 0;
+    const pointsEarned = factorDetails.pointsMultiplier !== 0 ? Math.round(parsedAmount * factorDetails.pointsMultiplier) : 0;
 
     const activity: ActivityLog = {
       id: generateId(),
