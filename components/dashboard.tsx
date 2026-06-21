@@ -301,10 +301,10 @@ export function Dashboard() {
             {/* Smart Suggestions & Personalized recommendations */}
             <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
               <div>
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4 flex items-center gap-1.5">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4 flex items-center gap-1.5">
                   <Compass className="w-4 h-4 text-emerald-600" aria-hidden="true" />
                   Eco Recommendations
-                </h3>
+                </h2>
                 <div className="space-y-4">
                   {getSuggestions().map((s, idx) => (
                     <div key={idx} className="p-3.5 bg-emerald-50/50 border border-emerald-100 rounded-xl space-y-1">

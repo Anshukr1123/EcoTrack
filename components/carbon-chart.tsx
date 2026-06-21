@@ -84,30 +84,36 @@ export default function CarbonChart({ activities }: { activities: ActivityLog[] 
     <div className="space-y-6">
       {/* Chart Toggle Header */}
       <div className="flex justify-between items-center pb-4 border-b border-slate-100">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">
           Emission Visualizations
-        </h3>
-        <div className="flex bg-slate-100 p-1 rounded-xl">
+        </h2>
+        <div className="flex bg-slate-100 p-1 rounded-xl" role="tablist" aria-label="Emission visualization formats">
           <button
             onClick={() => setChartType('bar')}
+            role="tab"
+            aria-selected={chartType === 'bar'}
+            aria-label="Display footprint as weekly bar chart"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               chartType === 'bar'
                 ? 'bg-white text-slate-800 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <BarChart className="w-3.5 h-3.5" />
+            <BarChart className="w-3.5 h-3.5" aria-hidden="true" />
             Bar Chart
           </button>
           <button
             onClick={() => setChartType('pie')}
+            role="tab"
+            aria-selected={chartType === 'pie'}
+            aria-label="Display footprint as category pie chart"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               chartType === 'pie'
                 ? 'bg-white text-slate-800 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <PieChart className="w-3.5 h-3.5" />
+            <PieChart className="w-3.5 h-3.5" aria-hidden="true" />
             Pie Chart
           </button>
         </div>

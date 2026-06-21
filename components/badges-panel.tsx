@@ -32,10 +32,10 @@ export default function BadgesPanel({
 }: BadgesPanelProps) {
   return (
     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
-      <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+      <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
         <Award className="w-4 h-4 text-emerald-600" aria-hidden="true" />
         Achievements
-      </h3>
+      </h2>
       <div className="grid grid-cols-5 gap-3" role="list" aria-label="EcoTrack Achievements list">
         {badges.map((b) => (
           <div

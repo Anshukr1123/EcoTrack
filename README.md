@@ -20,16 +20,25 @@ Users can visualize their emissions, complete active eco-challenges, fund carbon
 
 ---
 
-## 1. Problem Statement & Solution
+## 1. Challenge & Problem Statement Alignment
 
-### The Problem
-Many individuals want to adopt sustainable habits but lack the tools to measure their daily environmental impact. Existing carbon calculators are often overly technical, requiring manual, tedious input fields, which fails to keep users engaged.
+> [!IMPORTANT]
+> **The Problem: Carbon Footprint Ignorance**
+> Most people are unaware of how their daily actions—commutes, meals, heating, waste—translate into actual greenhouse gas quantities. Existing calculators are overly technical, demanding manual inputs for multiple fields (kilowatts, fuel types, exact weights), which leads to rapid user drop-off.
 
-### The Solution
-EcoTrack AI provides:
-* **Frictionless AI Inputs**: Users can simply type *"I biked 10 km and ate a vegan lunch"* to automatically log their footprint.
-* **Gamified Incentives**: Earn Eco Points by engaging in positive environmental actions, which can be spent to fund verified carbon offset projects.
-* **Actionable Projections**: Predictive analytics forecasting monthly and annual carbon emissions based on current behaviors.
+> [!NOTE]
+> **Why It Matters**
+> Personal consumption accounts for a significant portion of global greenhouse gas emissions. Lowering the cognitive barrier to tracking allows individuals to make small, compound changes that drive meaningful, localized emission reductions.
+
+### AI-Powered Core Solution
+EcoTrack AI provides an elegant **Natural Language Logging Interface** to completely bypass tedious forms:
+* 🗣️ **Conversational Interface**: Users describe their day in normal sentences (e.g. *"I rode the bus for 12 km and had a plant-based lunch"*).
+* 🤖 **AI Entity Extraction**: Google Gemini (`gemini-2.5-flash` in JSON schema mode) strips formatting, extracts specific activities, converts quantities, and presents one-click logging options.
+* ♻️ **Points-based Offset Loop**: Earn **Eco Points** by completing climate challenges. Spend points to fund offset projects like tree plantation, directly subtracting carbon from your net balance.
+
+### Sustainability & Climate Impact
+* **Behavioral Anchoring**: Immediate visibility into monthly and annual forecasts prompts users to lower high-impact actions (like meat consumption or driving).
+* **Direct Mitigation**: Users can redeem offset rewards to fund tangible, real-world carbon sinks (planting native trees, setting up solar grids) which records negative emissions on their dashboard.
 
 ---
 

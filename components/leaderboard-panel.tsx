@@ -24,10 +24,10 @@ export default function LeaderboardPanel({
   return (
     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
           <Users className="w-4 h-4 text-indigo-500" />
           Leaderboards
-        </h3>
+        </h2>
         <div className="flex bg-slate-100 p-0.5 rounded-lg text-[10px]" role="tablist" aria-label="Leaderboard scope selection">
           {(['friends', 'college', 'city'] as const).map((tab) => (
             <button
