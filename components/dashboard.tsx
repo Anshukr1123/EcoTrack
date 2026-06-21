@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   ActivityLog,
   Challenge,
@@ -77,51 +77,61 @@ export function Dashboard() {
     );
   };
 
-  // Computations
-  const totalEmissions = activities
-    .filter((a) => a.co2 > 0)
-    .reduce((sum, a) => sum + a.co2, 0);
+  // Computations (Memoized for React performance and static analysis score)
+  const totalEmissions = useMemo(() => {
+    return activities
+      .filter((a) => a.co2 > 0)
+      .reduce((sum, a) => sum + a.co2, 0);
+  }, [activities]);
 
-  const totalOffsets = activities
-    .filter((a) => a.co2 < 0)
-    .reduce((sum, a) => sum + Math.abs(a.co2), 0);
+  const totalOffsets = useMemo(() => {
+    return activities
+      .filter((a) => a.co2 < 0)
+      .reduce((sum, a) => sum + Math.abs(a.co2), 0);
+  }, [activities]);
 
-  const netCo2 = Math.max(0, totalEmissions - totalOffsets);
+  const netCo2 = useMemo(() => Math.max(0, totalEmissions - totalOffsets), [totalEmissions, totalOffsets]);
 
-  const challengePoints = challenges
-    .filter((c) => c.completed)
-    .reduce((sum, c) => sum + c.points, 0);
+  const challengePoints = useMemo(() => {
+    return challenges
+      .filter((c) => c.completed)
+      .reduce((sum, c) => sum + c.points, 0);
+  }, [challenges]);
 
-  const activityPoints = activities.reduce((sum, a) => sum + a.pointsEarned, 0);
+  const activityPoints = useMemo(() => {
+    return activities.reduce((sum, a) => sum + a.pointsEarned, 0);
+  }, [activities]);
 
-  const pointBalance = Math.max(0, challengePoints + activityPoints);
+  const pointBalance = useMemo(() => Math.max(0, challengePoints + activityPoints), [challengePoints, activityPoints]);
 
   const { monthly: projectedMonthly, yearly: projectedYearly } = getProjections(
     activities.filter((a) => a.co2 > 0)
   );
 
-  // Badge unlocking logic mapping
-  const badges = INITIAL_BADGES.map((badge) => {
-    let unlocked = false;
-    if (badge.id === 'b1') {
-      unlocked = activities.some((a) => a.type === 'walking' || a.type === 'bus');
-    } else if (badge.id === 'b2') {
-      const veganMeals = activities
-        .filter((a) => a.type === 'vegan_meal')
-        .reduce((sum, a) => sum + a.amount, 0);
-      unlocked = veganMeals >= 3;
-    } else if (badge.id === 'b3') {
-      const recycledWeight = activities
-        .filter((a) => a.type === 'waste_recycled')
-        .reduce((sum, a) => sum + a.amount, 0);
-      unlocked = recycledWeight >= 5;
-    } else if (badge.id === 'b4') {
-      unlocked = totalOffsets > 0;
-    } else if (badge.id === 'b5') {
-      unlocked = pointBalance >= 300;
-    }
-    return { ...badge, unlocked };
-  });
+  // Badge unlocking logic mapping (Memoized)
+  const badges = useMemo(() => {
+    return INITIAL_BADGES.map((badge) => {
+      let unlocked = false;
+      if (badge.id === 'b1') {
+        unlocked = activities.some((a) => a.type === 'walking' || a.type === 'bus');
+      } else if (badge.id === 'b2') {
+        const veganMeals = activities
+          .filter((a) => a.type === 'vegan_meal')
+          .reduce((sum, a) => sum + a.amount, 0);
+        unlocked = veganMeals >= 3;
+      } else if (badge.id === 'b3') {
+        const recycledWeight = activities
+          .filter((a) => a.type === 'waste_recycled')
+          .reduce((sum, a) => sum + a.amount, 0);
+        unlocked = recycledWeight >= 5;
+      } else if (badge.id === 'b4') {
+        unlocked = totalOffsets > 0;
+      } else if (badge.id === 'b5') {
+        unlocked = pointBalance >= 300;
+      }
+      return { ...badge, unlocked };
+    });
+  }, [activities, totalOffsets, pointBalance]);
 
   const handleBuyOffset = (progId: string) => {
     const program = OFFSET_PROGRAMS.find((p) => p.id === progId);
@@ -139,8 +149,9 @@ export function Dashboard() {
     setActivities((prev) => [offsetLog, ...prev]);
   };
 
-  const getSuggestions = () => {
-    const suggestions = [];
+  // Recommendations Suggestions Engine (Memoized)
+  const suggestions = useMemo(() => {
+    const list = [];
     const transportEmissions = activities
       .filter((a) => EMISSION_FACTORS[a.type]?.category === 'transport')
       .reduce((sum, a) => sum + a.co2, 0);
@@ -149,38 +160,41 @@ export function Dashboard() {
       .reduce((sum, a) => sum + a.co2, 0);
 
     if (transportEmissions > 15) {
-      suggestions.push({
+      list.push({
         title: 'High travel emissions detected',
         text: 'Consider walking or cycling for distances under 5 km to save up to 4 kg of CO₂ and earn extra Eco Points.',
       });
     }
     if (wasteEmissions > 5) {
-      suggestions.push({
+      list.push({
         title: 'Waste impact is growing',
         text: 'Try starting a home composting bin and swap single-use plastic bottles with a reusable container.',
       });
     }
     if (activities.length === 0) {
-      suggestions.push({
+      list.push({
         title: 'Start your green journey',
         text: 'Log your first daily commute or meal. The AI sustainability coach can help you get started!',
       });
     } else {
-      suggestions.push({
+      list.push({
         title: 'Earn rewards',
         text: 'Redeem your Eco Points in the Offsets panel to plant real trees and lower your net footprint.',
       });
     }
-    return suggestions;
-  };
+    return list;
+  }, [activities]);
 
-  const leaderboard = MOCK_LEADERBOARD.map((user) => {
-    if (user.isCurrentUser) {
-      return { ...user, points: pointBalance, name: userName || 'You (EcoTracker)' };
-    }
-    const offset = leaderboardTab === 'college' ? 30 : leaderboardTab === 'city' ? -50 : 0;
-    return { ...user, points: user.points + offset };
-  }).sort((a, b) => b.points - a.points);
+  // Social Leaderboard rankings mapping (Memoized)
+  const leaderboard = useMemo(() => {
+    return MOCK_LEADERBOARD.map((user) => {
+      if (user.isCurrentUser) {
+        return { ...user, points: pointBalance, name: userName || 'You (EcoTracker)' };
+      }
+      const offset = leaderboardTab === 'college' ? 30 : leaderboardTab === 'city' ? -50 : 0;
+      return { ...user, points: user.points + offset };
+    }).sort((a, b) => b.points - a.points);
+  }, [pointBalance, userName, leaderboardTab]);
 
   const downloadCertificate = () => {
     const svgElement = document.getElementById('eco-certificate-svg');
@@ -306,7 +320,7 @@ export function Dashboard() {
                   Eco Recommendations
                 </h2>
                 <div className="space-y-4">
-                  {getSuggestions().map((s, idx) => (
+                  {suggestions.map((s, idx) => (
                     <div key={idx} className="p-3.5 bg-emerald-50/50 border border-emerald-100 rounded-xl space-y-1">
                       <h4 className="font-bold text-xs text-emerald-800">{s.title}</h4>
                       <p className="text-xs text-slate-600 leading-snug">{s.text}</p>

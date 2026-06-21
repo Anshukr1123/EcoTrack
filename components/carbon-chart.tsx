@@ -39,14 +39,19 @@ export default function CarbonChart({ activities }: { activities: ActivityLog[] 
   // Filter out offsets (activities with negative co2) for accurate emission reporting in charts
   const emissionActivities = activities.filter(a => a.co2 > 0);
 
+  // Group daily emissions beforehand using a Map lookup to lower complexity to linear time
+  const dailyTotals: Record<number, number> = {};
+  emissionActivities.forEach((a) => {
+    const dayTime = startOfDay(new Date(a.date)).getTime();
+    dailyTotals[dayTime] = (dailyTotals[dayTime] || 0) + a.co2;
+  });
+
   // Group last 7 days for the Bar Chart
   const barData = [];
   for (let i = 6; i >= 0; i--) {
     const date = startOfDay(subDays(new Date(), i));
-    const dayActivities = emissionActivities.filter(
-      (a) => startOfDay(new Date(a.date)).getTime() === date.getTime()
-    );
-    const totalCo2 = dayActivities.reduce((sum, a) => sum + a.co2, 0);
+    const dayTime = date.getTime();
+    const totalCo2 = dailyTotals[dayTime] || 0;
     barData.push({
       day: format(date, 'MMM dd'),
       co2: Number(totalCo2.toFixed(2)),
