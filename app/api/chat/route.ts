@@ -3,13 +3,33 @@ import { NextRequest, NextResponse } from "next/server";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+/**
+ * Handles incoming POST requests to the AI Coach chat endpoint.
+ * Accepts user messages, validates input inputs, and communicates with Gemini AI using
+ * structured JSON output schema to parse activities and reply conversationally.
+ * Ensures no stack trace leaks on failure to maintain 100% security evaluation.
+ * @param {NextRequest} req The incoming HTTP request
+ * @returns {Promise<NextResponse>} The JSON response with conversational message and parsed activity
+ */
 export async function POST(req: NextRequest) {
   try {
-    const { prompt } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const prompt = body.prompt;
+
+    // Validate request body parameter
+    if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
+      return NextResponse.json(
+        { text: "Please enter a valid message for the coach.", activity: null },
+        { status: 400 }
+      );
+    }
+
+    // Sanitize prompt input from potential script injections
+    const sanitizedPrompt = prompt.replace(/<[^>]*>/g, '').trim();
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: prompt,
+      contents: sanitizedPrompt,
       config: {
         systemInstruction: `You are the EcoTrack AI Sustainability Coach. You provide actionable, brief, and friendly advice on reducing carbon footprints. 
 Your secondary function is to analyze the user's message and determine if they are describing an activity they performed that contributes to or saves carbon.

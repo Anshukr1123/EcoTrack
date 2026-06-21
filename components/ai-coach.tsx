@@ -202,14 +202,16 @@ export default function AiCoach({ onAddActivity }: AiCoachProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question or log ('I biked 10 km')..."
+            aria-label="Ask your sustainability coach or describe an activity to log"
             className="w-full bg-slate-850 text-white placeholder-slate-500 border border-slate-700/80 rounded-full pl-5 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all text-sm"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
+            aria-label="Send message to Eco Coach"
             className="absolute right-1.5 top-1/2 -translate-y-1/2 p-2 bg-emerald-500 text-slate-950 rounded-full hover:bg-emerald-400 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </form>

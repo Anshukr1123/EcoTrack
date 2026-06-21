@@ -1,3 +1,6 @@
+/**
+ * Supported carbon-generating or eco-friendly activity types in the EcoTrack AI platform.
+ */
 export type ActivityType =
   | 'car'
   | 'bus'
@@ -14,18 +17,41 @@ export type ActivityType =
   | 'clothing'
   | 'electronics';
 
+/**
+ * Represents a single logged activity by the user.
+ */
 export type ActivityLog = {
+  /** Unique identifier for the log entry */
   id: string;
+  /** Type of the logged activity */
   type: ActivityType;
+  /** Raw quantity logged (e.g. kilometers, kWh, items) */
   amount: number;
+  /** Total calculated carbon impact in kilograms of CO2 equivalent */
   co2: number;
+  /** ISO date string of when the activity took place */
   date: string;
+  /** Points awarded or deducted for the activity */
   pointsEarned: number;
 };
 
+/**
+ * Emission factors metadata including GHG emission constants, points multipliers, and category types.
+ */
 export const EMISSION_FACTORS: Record<
   ActivityType,
-  { factor: number; unit: string; label: string; pointsMultiplier: number; category: string }
+  { 
+    /** CO2 emission factor per unit (in kg CO2 / unit) */
+    factor: number; 
+    /** Measurement unit (e.g. km, kWh, kg, items) */
+    unit: string; 
+    /** Human-readable display label */
+    label: string; 
+    /** Multiplier to calculate Eco Points awarded per unit */
+    pointsMultiplier: number; 
+    /** Parent category for dashboard filtering */
+    category: string; 
+  }
 > = {
   car: { factor: 0.192, unit: 'km', label: 'Car Travel', pointsMultiplier: 0, category: 'transport' },
   bus: { factor: 0.089, unit: 'km', label: 'Public Transport', pointsMultiplier: 2, category: 'transport' },
@@ -43,14 +69,25 @@ export const EMISSION_FACTORS: Record<
   electronics: { factor: 45.0, unit: 'items', label: 'Electronics Purchase', pointsMultiplier: 0, category: 'shopping' },
 };
 
+/**
+ * Represents a gamified eco-challenge for the user.
+ */
 export type Challenge = {
+  /** Unique challenge identifier */
   id: string;
+  /** Short descriptive title */
   title: string;
+  /** Eco Points awarded upon completion */
   points: number;
+  /** In-depth description of the goal */
   description: string;
+  /** Completion status flag */
   completed: boolean;
 };
 
+/**
+ * Initial set of challenges available to new users.
+ */
 export const INITIAL_CHALLENGES: Challenge[] = [
   { id: '1', title: 'Meat-Free Monday', points: 50, description: 'Enjoy purely plant-based meals for an entire day.', completed: false },
   { id: '2', title: 'No Plastic Day', points: 30, description: 'Refuse all single-use plastics today.', completed: false },
@@ -60,21 +97,33 @@ export const INITIAL_CHALLENGES: Challenge[] = [
   { id: '6', title: 'Car-Free Friday', points: 80, description: 'Use public transport, walk, or cycle to work.', completed: false },
 ];
 
+/**
+ * Represents a carbon offset program.
+ */
 export type OffsetProgram = {
+  /** Unique program identifier */
   id: string;
+  /** Descriptive title */
   title: string;
+  /** Cost in Eco Points required to fund */
   costPoints: number;
+  /** Weight of carbon offset in kilograms of CO2 */
   co2Offset: number;
+  /** Explanation of the program's environmental impact */
   description: string;
+  /** Icon/emoji representation */
   image: string;
 };
 
+/**
+ * Available carbon offset initiatives for point redemptions.
+ */
 export const OFFSET_PROGRAMS: OffsetProgram[] = [
   {
     id: 'tree_plantation',
     title: 'Plant a Native Tree',
     costPoints: 150,
-    co2Offset: 10, // kg CO2
+    co2Offset: 10,
     description: 'Support local reforestation efforts to restore habitats and absorb carbon.',
     image: '🌳',
   },
@@ -82,7 +131,7 @@ export const OFFSET_PROGRAMS: OffsetProgram[] = [
     id: 'solar_energy',
     title: 'Rural Solar Initiative',
     costPoints: 250,
-    co2Offset: 25, // kg CO2
+    co2Offset: 25,
     description: 'Fund solar panels for off-grid schools and medical clinics.',
     image: '☀️',
   },
@@ -90,20 +139,31 @@ export const OFFSET_PROGRAMS: OffsetProgram[] = [
     id: 'cleanup_drive',
     title: 'Ocean Cleanup Drive',
     costPoints: 100,
-    co2Offset: 5, // kg CO2
+    co2Offset: 5,
     description: 'Finance volunteer teams removing plastic and trash from coastal regions.',
     image: '🌊',
   },
 ];
 
+/**
+ * Represents an achievement badge.
+ */
 export type Badge = {
+  /** Unique badge identifier */
   id: string;
+  /** Display title */
   title: string;
+  /** Unlocking condition explanation */
   description: string;
+  /** Emoji representation */
   icon: string;
+  /** Unlocked achievement state flag */
   unlocked: boolean;
 };
 
+/**
+ * Initial achievements array structure.
+ */
 export const INITIAL_BADGES: Badge[] = [
   { id: 'b1', title: 'Green Commuter', description: 'Log a walking, cycling, or public transport activity', icon: '🚲', unlocked: false },
   { id: 'b2', title: 'Plant Lover', description: 'Eat at least 3 plant-based vegan meals', icon: '🌱', unlocked: false },
@@ -112,13 +172,23 @@ export const INITIAL_BADGES: Badge[] = [
   { id: 'b5', title: 'Eco Warrior', description: 'Earn a total of 300 Eco Points', icon: '🥇', unlocked: false },
 ];
 
+/**
+ * Represents an entry on the leaderboards.
+ */
 export type LeaderboardEntry = {
+  /** Competitor nickname */
   name: string;
+  /** Total Eco Points balance */
   points: number;
+  /** Current list ranking */
   rank: number;
+  /** Identifier flag if the entry represents the active user */
   isCurrentUser?: boolean;
 };
 
+/**
+ * Mock leaderboard standings for friendly gamified competition.
+ */
 export const MOCK_LEADERBOARD: LeaderboardEntry[] = [
   { name: 'Sarah Jenkins', points: 620, rank: 1 },
   { name: 'Aarav Sharma', points: 450, rank: 2 },
@@ -127,7 +197,11 @@ export const MOCK_LEADERBOARD: LeaderboardEntry[] = [
   { name: 'David Smith', points: 120, rank: 5 },
 ];
 
-// Generates a unique ID
+/**
+ * Generates a high-entropy, unique ID string for data structures.
+ * Leverages global crypto module if available; falls back to high-randomness timestamp generator.
+ * @returns {string} Unique identifier
+ */
 export function generateId(): string {
   if (typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.randomUUID) {
     return globalThis.crypto.randomUUID();
@@ -138,11 +212,15 @@ export function generateId(): string {
   return `eco-${Date.now()}-${Math.floor(Math.random() * 10000000)}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
-// Predictive emission calculations helper
+/**
+ * Computes predictive carbon footprints based on logged activities.
+ * Calculates average daily carbon outputs and projects them monthly and annually.
+ * @param {ActivityLog[]} activities Logged emissions events
+ * @returns {{ monthly: number, yearly: number }} Estimated monthly and annual carbon outputs in kg CO2
+ */
 export function getProjections(activities: ActivityLog[]) {
   if (activities.length === 0) return { monthly: 0, yearly: 0 };
   
-  // Calculate average daily emissions
   const dates = activities.map(a => new Date(a.date).toDateString());
   const uniqueDays = new Set(dates).size || 1;
   const totalCo2 = activities.reduce((sum, a) => sum + a.co2, 0);

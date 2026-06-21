@@ -90,10 +90,11 @@ export default function ActivityForm({ onAdd }: { onAdd: (activity: ActivityLog)
       <form onSubmit={handleSubmit} className="space-y-4 flex-1 flex flex-col justify-between">
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+            <label htmlFor="activity-type-select" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
               Activity Type
             </label>
             <select
+              id="activity-type-select"
               value={type}
               onChange={(e) => {
                 setType(e.target.value as ActivityType);
@@ -110,11 +111,12 @@ export default function ActivityForm({ onAdd }: { onAdd: (activity: ActivityLog)
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+            <label htmlFor="activity-amount-input" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
               Amount ({factorDetails?.unit})
             </label>
             <input
               type="number"
+              id="activity-amount-input"
               step="any"
               min="0"
               value={amount}
