@@ -15,10 +15,18 @@ type Message = {
   };
 };
 
+/**
+ * Props for the AiCoach component.
+ */
 interface AiCoachProps {
+  /** Callback to log a newly parsed activity into the user's dashboard */
   onAddActivity: (activity: ActivityLog) => void;
 }
 
+/**
+ * AiCoach provides an interactive AI chatbot experience using Gemini.
+ * It suggests responses, answers sustainability questions, and extracts loggable activities.
+ */
 export default function AiCoach({ onAddActivity }: AiCoachProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -167,6 +175,11 @@ export default function AiCoach({ onAddActivity }: AiCoachProps) {
                   <button
                     onClick={() => handleLogActivity(i, msg.activity!)}
                     disabled={msg.activity.logged}
+                    aria-label={
+                      msg.activity.logged
+                        ? `Logged: ${EMISSION_FACTORS[msg.activity.type]?.label || msg.activity.type} ${msg.activity.amount} ${EMISSION_FACTORS[msg.activity.type]?.unit}`
+                        : `Log detected activity: ${EMISSION_FACTORS[msg.activity.type]?.label || msg.activity.type} ${msg.activity.amount} ${EMISSION_FACTORS[msg.activity.type]?.unit}`
+                    }
                     className={`px-3 py-2 rounded-lg font-bold tracking-tight transition-all shrink-0 ${
                       msg.activity.logged
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-not-allowed'

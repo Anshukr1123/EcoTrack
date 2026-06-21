@@ -120,6 +120,7 @@ export default function BadgesPanel({
                   viewBox="0 0 800 600"
                   className="w-full h-full object-contain"
                   xmlns="http://www.w3.org/2000/svg"
+                  role="img"
                   aria-label={`EcoTrack Sustainability Certificate awarded to ${userName || 'Eco Warrior'}`}
                 >
                   <rect width="800" height="600" fill="#f8fafc" rx="16" />

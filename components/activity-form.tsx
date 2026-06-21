@@ -11,6 +11,10 @@ const CATEGORIES = [
   { id: 'shopping', label: 'Shopping', icon: ShoppingBag, color: 'text-pink-500 bg-pink-50 hover:bg-pink-100' },
 ];
 
+/**
+ * ActivityForm handles logging carbon-impactful activities by category.
+ * It provides category tab selections, input options, and dynamic impact estimations.
+ */
 export default function ActivityForm({ onAdd }: { onAdd: (activity: ActivityLog) => void }) {
   const [activeTab, setActiveTab] = useState('transport');
   const [type, setType] = useState<ActivityType>('car');
@@ -64,7 +68,7 @@ export default function ActivityForm({ onAdd }: { onAdd: (activity: ActivityLog)
       </h2>
 
       {/* Category Tabs */}
-      <div className="grid grid-cols-5 gap-1 mb-5">
+      <div className="grid grid-cols-5 gap-1 mb-5" role="tablist" aria-label="Activity Categories">
         {CATEGORIES.map((cat) => {
           const Icon = cat.icon;
           const isActive = activeTab === cat.id;
@@ -73,13 +77,16 @@ export default function ActivityForm({ onAdd }: { onAdd: (activity: ActivityLog)
               key={cat.id}
               type="button"
               onClick={() => handleTabChange(cat.id)}
+              role="tab"
+              aria-selected={isActive}
+              aria-label={`Switch to ${cat.label} category`}
               className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all text-[10px] sm:text-xs font-semibold gap-1.5 ${
                 isActive
                   ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-500'
                   : 'border-slate-100 bg-slate-50/50 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              <Icon className="w-4 h-4 sm:w-5 h-5" />
+              <Icon className="w-4 h-4 sm:w-5 h-5" aria-hidden="true" />
               <span className="hidden sm:inline">{cat.label}</span>
               <span className="sm:hidden">{cat.label.split(' ')[0]}</span>
             </button>

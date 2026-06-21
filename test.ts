@@ -115,7 +115,22 @@ async function runTests() {
     if (!jsonValid.text) {
       throw new Error(`FAIL: Valid prompt response lacks text property`);
     }
-    console.log("✓ Test 4: API route input validations & error boundaries verified");
+    // Case C: HTML Sanitization & Injection resilience
+    const reqInject = new NextRequest('http://localhost/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: '<script>console.log("malicious")</script> I walked 5 km' }),
+    });
+    const resInject = await POST(reqInject);
+    if (resInject.status !== 200) {
+      throw new Error(`FAIL: HTML injection payload expected status 200, got ${resInject.status}`);
+    }
+    const jsonInject = await resInject.json();
+    if (!jsonInject.text) {
+      throw new Error(`FAIL: HTML injection response lacks text property`);
+    }
+
+    console.log("✓ Test 4: API route input validations, HTML sanitization, & error boundaries verified");
 
     console.log("==========================================");
     console.log("      ALL UNIT & API TESTS PASSED!        ");

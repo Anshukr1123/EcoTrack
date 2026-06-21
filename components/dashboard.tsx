@@ -17,16 +17,12 @@ import LeaderboardPanel from './leaderboard-panel';
 import ChallengesPanel from './challenges-panel';
 import OffsetsPanel from './offsets-panel';
 import BadgesPanel from './badges-panel';
+import StatsGrid from './stats-grid';
 import dynamic from 'next/dynamic';
 import {
   Leaf,
   Trophy,
-  Target,
-  TrendingDown,
-  Award,
   Compass,
-  TrendingUp,
-  AlertCircle,
 } from 'lucide-react';
 
 const CarbonChart = dynamic(() => import('./carbon-chart'), { ssr: false });
@@ -257,53 +253,13 @@ export function Dashboard() {
       </header>
 
       {/* Quick Stats Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Gross Carbon Logged</span>
-            <Target className="w-5 h-5 text-blue-500" aria-hidden="true" />
-          </div>
-          <div className="mt-4">
-            <span className="text-2xl font-extrabold text-slate-800">{totalEmissions.toFixed(1)}</span>
-            <span className="text-sm font-semibold text-slate-400 ml-1">kg CO₂</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Offsets Funded</span>
-            <Leaf className="w-5 h-5 text-emerald-500" aria-hidden="true" />
-          </div>
-          <div className="mt-4">
-            <span className="text-2xl font-extrabold text-emerald-600">-{totalOffsets.toFixed(1)}</span>
-            <span className="text-sm font-semibold text-slate-400 ml-1">kg CO₂</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Net Carbon Footprint</span>
-            <TrendingDown className="w-5 h-5 text-indigo-500" aria-hidden="true" />
-          </div>
-          <div className="mt-4">
-            <span className={`text-2xl font-extrabold ${netCo2 === 0 ? 'text-emerald-600' : 'text-slate-800'}`}>
-              {netCo2.toFixed(1)}
-            </span>
-            <span className="text-sm font-semibold text-slate-400 ml-1">kg CO₂</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Emissions Forecast</span>
-            <TrendingUp className="w-5 h-5 text-rose-500" aria-hidden="true" />
-          </div>
-          <div className="mt-2 text-xs text-slate-500">
-            <div>Month: <span className="font-bold text-slate-700">{projectedMonthly} kg</span></div>
-            <div>Year: <span className="font-bold text-slate-700">{projectedYearly} kg</span></div>
-          </div>
-        </div>
-      </section>
+      <StatsGrid
+        totalEmissions={totalEmissions}
+        totalOffsets={totalOffsets}
+        netCo2={netCo2}
+        projectedMonthly={projectedMonthly}
+        projectedYearly={projectedYearly}
+      />
 
       {/* Main Layout Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

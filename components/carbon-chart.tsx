@@ -33,6 +33,12 @@ const CATEGORY_LABELS: Record<string, string> = {
   shopping: 'Shopping',
 };
 
+/**
+ * CarbonChart visualizes a user's carbon emissions.
+ * It provides toggleable formats between a weekly bar chart (daily emissions)
+ * and a category-based pie chart.
+ * Optimized to aggregate emissions in O(N) linear time.
+ */
 export default function CarbonChart({ activities }: { activities: ActivityLog[] }) {
   const [chartType, setChartType] = useState<'bar' | 'pie'>('bar');
 

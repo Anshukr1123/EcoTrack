@@ -95,7 +95,42 @@ Respond in a JSON format matching the schema. Always provide a friendly, encoura
     });
 
     const resultText = response.text || "{}";
-    const resultJson = JSON.parse(resultText);
+    let resultJson: { text: string; activity: { type: string; amount: number } | null };
+    try {
+      resultJson = JSON.parse(resultText);
+    } catch {
+      resultJson = { text: "I had trouble understanding that. Let's try explaining it differently!", activity: null };
+    }
+
+    // Ensure the response structure is correct and contains expected properties
+    if (!resultJson.text || typeof resultJson.text !== 'string') {
+      resultJson.text = "I am here to help you track your carbon emissions and sustainability progress!";
+    }
+
+    if (resultJson.activity) {
+      const { type, amount } = resultJson.activity;
+      const allowedTypes = [
+        "car",
+        "bus",
+        "flight",
+        "walking",
+        "electricity",
+        "lpg",
+        "water",
+        "beef_meal",
+        "vegan_meal",
+        "plastic",
+        "waste_landfill",
+        "waste_recycled",
+        "clothing",
+        "electronics"
+      ];
+      if (!allowedTypes.includes(type) || typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
+        resultJson.activity = null;
+      }
+    } else {
+      resultJson.activity = null;
+    }
 
     return NextResponse.json(resultJson);
   } catch (error) {
