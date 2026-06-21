@@ -36,17 +36,23 @@ async function runTests() {
       }
     };
 
-    // Test various samples
+    // Test various samples - verifying all 14 carbon categories
     checkCoeff('car', 50, 9.6, 0);
     checkCoeff('bus', 15, 1.335, 30);
+    checkCoeff('flight', 500, 75.0, 0);
     checkCoeff('walking', 8, 0, 80);
     checkCoeff('electricity', 100, 38.5, 0);
-    checkCoeff('vegan_meal', 3, 0.9, 45);
+    checkCoeff('lpg', 10, 29.83, 0);
+    checkCoeff('water', 500, 0.15, 0);
     checkCoeff('beef_meal', 2, 6.0, 0);
+    checkCoeff('vegan_meal', 3, 0.9, 45);
     checkCoeff('plastic', 5, 0.6, -25);
+    checkCoeff('waste_landfill', 20, 10.0, 0);
     checkCoeff('waste_recycled', 12, 0.6, 96);
+    checkCoeff('clothing', 4, 24.0, 0);
+    checkCoeff('electronics', 2, 90.0, 0);
 
-    console.log("✓ Test 2: Standard calculations & points multipliers verified on diverse samples");
+    console.log("✓ Test 2: Standard calculations & points multipliers verified on all 14 allowed categories");
 
     // Test 3: Predictive Analytics Projections
     const projEmpty = getProjections([]);
